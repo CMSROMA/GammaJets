@@ -60,6 +60,7 @@ public :
    bool isHLT_50(bool isoCut);
    bool isHLT_75(bool isoCut);
    bool isHLT_90(bool isoCut);
+   bool isHLT_135();
    bool isHLT_150();
    bool passHLT(bool isoCut);
    int effectiveAreaRegion(float theEta);
@@ -187,6 +188,8 @@ void GammaJetAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("pu_weight50", &pu_weight50, &b_pu_weight50);
    fChain->SetBranchAddress("pu_weight75", &pu_weight75, &b_pu_weight75);
    fChain->SetBranchAddress("pu_weight90", &pu_weight90, &b_pu_weight90);
+   fChain->SetBranchAddress("pu_weight135", &pu_weight135, &b_pu_weight135);
+   fChain->SetBranchAddress("pu_weight150", &pu_weight150, &b_pu_weight150);
    fChain->SetBranchAddress("nPhot_gen", &nPhot_gen, &b_nPhot_gen);
    fChain->SetBranchAddress("deltaRMatch_gen", deltaRMatch_gen, &b_deltaRMatch_gen);
    fChain->SetBranchAddress("ptTrueMatch_gen", ptTrueMatch_gen, &b_ptTrueMatch_gen);

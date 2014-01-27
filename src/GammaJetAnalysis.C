@@ -59,11 +59,11 @@ void GammaJetAnalysis::Loop()
       std::vector<int> preselectPhotons=preselectedPhotons(photons);
       if (preselectPhotons.size()<1 && selectionType!="efficiencyStudy")
 	continue;
-
-      if ( photons.size() != preselectPhotons.size() ) { 
-	cout << "chiara: secondo me c'e' un problema. I fotoni in photons devono essere gia' preselezionati" << endl;
-	continue;
-      }
+      
+      // if ( photons.size() != preselectPhotons.size() ) { 
+      // cout << "chiara: secondo me c'e' un problema. I fotoni in photons devono essere gia' preselezionati" << endl;
+      // continue;
+      //}
       
       std::vector<int> selectPhotons=selectedPhotons(preselectPhotons);
       if (selectPhotons.size()<1 && selectionType!="efficiencyStudy")
@@ -312,12 +312,26 @@ bool GammaJetAnalysis::isHLT_90(bool isoCut) {
   return isok;
 }
 
+bool GammaJetAnalysis::isHLT_135() {
+
+  bool isok = false;
+  for (int ii=0; ii<(int)firedHLTNames->size(); ii++) {
+    if ( (*firedHLTNames)[ii]=="HLT_Photon135_v4") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon135_v5") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon135_v6") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon135_v7") isok=true;
+  }
+  return isok;
+}
+
 bool GammaJetAnalysis::isHLT_150() {
+
   bool isok = false;
   for (int ii=0; ii<(int)firedHLTNames->size(); ii++) {
     if ( (*firedHLTNames)[ii]=="HLT_Photon150_v1") isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Photon150_v2") isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Photon150_v3") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon150_v4") isok=true;
   }
   return isok;
 }
@@ -482,6 +496,9 @@ std::vector<int> GammaJetAnalysis::preselectedPhotons(const std::vector<int>& ph
       if ( preselHCAL > 50.)    continue;
       if ( preselTracker > 50.) continue;
 
+      // should be 02, but currently off in the ntuples 
+      if (pid_pfIsoCharged03ForCiC_presel[photons[ipho]]>4.) continue;
+
       if ( theEAregion<2) {  // EB
 	if ( pid_HoverE_presel[photons[ipho]]>0.075 )   continue;
 	if ( sEtaEtaPhot_presel[photons[ipho]]>0.014 ) continue;
@@ -496,7 +513,6 @@ std::vector<int> GammaJetAnalysis::preselectedPhotons(const std::vector<int>& ph
 
 std::vector<int> GammaJetAnalysis::selectedPhotons(const std::vector<int>& photons)
 {
-
   std::vector<int> selPhotons;
   double mva_cut_EB[4] = {0.892656, 0.844931, 0.766479, -1.};//corresponding to sig eff 0.80, 0.90, 0.95, 1.
   double mva_cut_EE[4] = {0.871778, 0.778579, 0.601807, -1.};//corresponding to sig eff 0.80, 0.90, 0.95, 1.
@@ -592,17 +608,21 @@ bool GammaJetAnalysis::passHLT(bool isoCut)
   if ( sampleIndex==0 && hltcut==50 && !isHLT_50(isoCut) )  return false;
   if ( sampleIndex==0 && hltcut==75 && !isHLT_75(isoCut) )  return false;
   if ( sampleIndex==0 && hltcut==90 && !isHLT_90(isoCut) )  return false;
+  if ( sampleIndex==0 && hltcut==135 && !isHLT_135() )      return false;
+  if ( sampleIndex==0 && hltcut==150 && !isHLT_150() )      return false;  
   return true;
 }
 
 float GammaJetAnalysis::GetPUWeight()
 {
   float weight=1;
-  if (sampleIndex!=0 && dopureweight && hltcut==0)  weight *= pu_weight;        // inclusive weight
-  if (sampleIndex!=0 && dopureweight && hltcut==30) weight *= pu_weight30;
-  if (sampleIndex!=0 && dopureweight && hltcut==50) weight *= pu_weight50;
-  if (sampleIndex!=0 && dopureweight && hltcut==75) weight *= pu_weight75;
-  if (sampleIndex!=0 && dopureweight && hltcut==90) weight *= pu_weight90;
+  if (sampleIndex!=0 && dopureweight && hltcut==0)   weight *= pu_weight;        // inclusive weight
+  if (sampleIndex!=0 && dopureweight && hltcut==30)  weight *= pu_weight30;
+  if (sampleIndex!=0 && dopureweight && hltcut==50)  weight *= pu_weight50;
+  if (sampleIndex!=0 && dopureweight && hltcut==75)  weight *= pu_weight75;
+  if (sampleIndex!=0 && dopureweight && hltcut==90)  weight *= pu_weight90;
+  if (sampleIndex!=0 && dopureweight && hltcut==135) weight *= pu_weight135;   
+  if (sampleIndex!=0 && dopureweight && hltcut==150) weight *= pu_weight150;   
   return weight;
 }
 
