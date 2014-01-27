@@ -89,7 +89,8 @@ TurnOnCurveGamma::TurnOnCurveGamma(TTree *tree) : fChain(0)
   if (tree == 0) {
 
     TChain * chain = new TChain("AnaTree","");
-    chain->Add("/xrootdfs/cms/local/meridian/GammaJets/reduced/redntp.53xv6_data_CERN.gjetpresel.noCorr.v2/*2012D*.root/AnaTree");
+    // chain->Add("/xrootdfs/cms/local/meridian/GammaJets/reduced/redntp.53xv6_data_CERN.gjetpresel.noCorr.v2/*2012D*.root/AnaTree");
+    chain->Add("/cmsrm/pc24/crovelli/GammaJets/reduced/redntp.53xv6_data_CERN.gjetpresel.noCorr.v2/merged/*2012D*.root/AnaTree");
 
     tree = chain;
   }
