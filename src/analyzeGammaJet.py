@@ -16,8 +16,8 @@ xrootd_server="pccmsrm24.cern.ch"
 output_dir="/cmsrm/pc24/crovelli/GammaJets/ridottissime"
 tmp_dir="/tmp/"+str(os.environ['USER'])
 
-mc_dir="root://pccmsrm24.cern.ch/cmsrm/pc24/crovelli/GammaJets/reduced/redntp.53xv6_CERN.gjetpresel.noCorr.v1"
-data_dir="root://pccmsrm24.cern.ch/cmsrm/pc24/crovelli/GammaJets/reduced/redntp.53xv6_data_CERN.gjetpresel.noCorr.v1"
+mc_dir="root://pccmsrm24.cern.ch/cmsrm/pc24/crovelli/GammaJets/reduced/redntp.53xv6_CERN.gjetpresel.noCorr.v2"
+data_dir="root://pccmsrm24.cern.ch/cmsrm/pc24/crovelli/GammaJets/reduced/redntp.53xv6_data_CERN.gjetpresel.noCorr.v2"
 
 cuts={}
 #The cuts will be passed as parameters
