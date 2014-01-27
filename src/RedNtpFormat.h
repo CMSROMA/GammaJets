@@ -19,6 +19,8 @@ Float_t         pu_weight30;
 Float_t         pu_weight50;
 Float_t         pu_weight75;
 Float_t         pu_weight90;
+Float_t         pu_weight135;
+Float_t         pu_weight150;
 Int_t           nPhot_gen;
 Float_t         deltaRMatch_gen[NPHOTGENMAX]; //[nPhot_gen]
 Float_t         ptTrueMatch_gen[NPHOTGENMAX]; //[nPhot_gen]
@@ -119,6 +121,8 @@ std::vector<std::string>  *firedHLTNames;
    TBranch        *b_pu_weight50;   //!
    TBranch        *b_pu_weight75;   //!
    TBranch        *b_pu_weight90;   //!
+   TBranch        *b_pu_weight135;   //!
+   TBranch        *b_pu_weight150;   //!
    TBranch        *b_nPhot_gen;   //!
    TBranch        *b_deltaRMatch_gen; //!
    TBranch        *b_ptTrueMatch_gen; //!
