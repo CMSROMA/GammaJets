@@ -13,7 +13,6 @@ void TurnOnCurveGamma::Loop() {
   if (fChain == 0) return;
   
   int nentries = fChain->GetEntries();
-  // cout << "chiara: nentries = " << nentries << endl;
   
   // Initialization
   SetAllMVA();
@@ -44,6 +43,7 @@ void TurnOnCurveGamma::Loop() {
     isHLT90  = isHLT_90();
     isHLT135 = isHLT_135();   
     isHLT150 = isHLT_150();   
+    if (!isHLT30 && !isHLT50 && !isHLT75 && !isHLT90 && !isHLT135 && !isHLT150) continue;
     
     /*
     // check if there is a Z in the event, to have a pure enough sample 
@@ -114,10 +114,10 @@ void TurnOnCurveGamma::Loop() {
     std::vector<int> preselectPhotons=preselectedPhotons(photons);
     if (preselectPhotons.size()<1) continue;
     
-    if ( photons.size() != preselectPhotons.size() ) {
-      cout << "chiara: secondo me c'e' un problema. I fotoni in photons devono essere gia' preselezionati" << endl;
-      continue;
-    }
+    // if ( photons.size() != preselectPhotons.size() ) {
+    // cout << "chiara: secondo me c'e' un problema. I fotoni in photons devono essere gia' preselezionati" << endl;
+    // continue;
+    // }
 
     std::vector<int> selectPhotons=selectedPhotons(preselectPhotons);
     if (selectPhotons.size()<1) continue;
@@ -323,6 +323,9 @@ std::vector<int> TurnOnCurveGamma::preselectedPhotons(const std::vector<int>& ph
     if ( preselECAL > 50.)    continue;
     if ( preselHCAL > 50.)    continue;
     if ( preselTracker > 50)  continue;
+
+    // should be 02, but currently off in the ntuples                                                                                             
+    if (pid_pfIsoCharged03ForCiC_presel[photons[ipho]]>4.) continue;
 
     if ( theEAregion<2) {  // EB
       if ( pid_HoverE_presel[photons[ipho]]>0.075 )  continue;
