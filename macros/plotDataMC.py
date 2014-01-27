@@ -20,7 +20,8 @@ variables['etaPhot']='etaPhot'
 variables['mvaIdPhot']='mvaIdPhot'
 variables['nvtx']='nvtx'
 variables['combinedPfIso03Phot']='combinedPfIso03Phot'
-variables['rho']='rho'
+variables['combinedPfIsoFPR03Phot']='combinedPfIsoFPR03Phot'
+#variables['rho']='rho'
 
 #characteristics of the plot of a given variable
 plotPars={}
@@ -29,13 +30,16 @@ plotPars['etaPhot']=dict( name='etaPhot', nBins=60, xMin=-3., xMax=3., xaxisLabe
 plotPars['mvaIdPhot']=dict( name='mvaIdPhot', nBins=100, xMin=0., xMax=1., xaxisLabel="#gamma MVA output")
 plotPars['nvtx']=dict( name='nvtx', nBins=41, xMin=-0.5, xMax=40.5, xaxisLabel="nvtx")
 plotPars['combinedPfIso03Phot']=dict( name='combinedPfIso03Phot', nBins=200, xMin=-5, xMax=15, xaxisLabel="combined PfIso #DeltaR=0.3 (GeV)")
-plotPars['rho']=dict( name='rho', nBins=100, xMin=0, xMax=40, xaxisLabel="#rho (GeV)")
+plotPars['combinedPfIsoFPR03Phot']=dict( name='combinedPfIsoFPR03Phot', nBins=200, xMin=-5, xMax=15, xaxisLabel="combined PfIso FPR #DeltaR=0.3 (GeV)")
+#plotPars['rho']=dict( name='rho', nBins=100, xMin=0, xMax=40, xaxisLabel="#rho (GeV)")
 
 #possible selections for the plots
 cuts={}
 cuts['All']='1' #just to avoid error
-cuts['EB']='abs(etaPhot)<1.4442'
-cuts['EE']='abs(etaPhot)>1.566 && abs(etaPhot)<2.5'
+#cuts['EB']='abs(etaPhot)<1.4442'
+#cuts['EE']='abs(etaPhot)>1.566 && abs(etaPhot)<2.5'
+cuts['EB']='abs(etaPhot)<1.4442 && (mvaIdPhot<1. && mvaIdPhot>0.766479)'
+cuts['EE']='abs(etaPhot)>1.566 && abs(etaPhot)<2.5 && (mvaIdPhot<1. && mvaIdPhot>0.601807)'
 
 #different types of MC (and corresponding selection to differentiate them using ntuple variables"
 mc_types={}
