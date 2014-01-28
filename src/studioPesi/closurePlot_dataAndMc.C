@@ -12,12 +12,12 @@ void closurePlot_dataAndMc(){
 
   // mc 
   TChain mcChain("myTrees_withWeight");
-  mcChain.Add("gjTrees_withWeights.root");
-  mcChain.Add("qcdTrees_withWeights.root");
+  mcChain.Add("outputWithWeight__Gjet__HLT135.root");
+  mcChain.Add("outputWithWeight__QCD__HLT135.root");
 
   // data
   TChain dataChain("myTrees_withWeight");
-  dataChain.Add("data2012ABC_withWeights.root");   // chiara: questo e' solo ABC....
+  dataChain.Add("outputWithWeight__data2012__HLT135.root");   
 
 
   // -----------------------------------------------------------------------------
@@ -96,38 +96,22 @@ void closurePlot_dataAndMc(){
   leg->AddEntry(mc_combFPR03Phot_isNotMatched_passMVA_EB, "MC in signal region", "l");
 
   TCanvas* c1 = new TCanvas("c1", "closureData EB", 1);
-  c1->Divide(2,2);
-  c1->cd(1); data_combFPR03Phot_notPassMVA_EB->DrawNormalized("pE");
-  c1->cd(2); mc_combFPR03Phot_isNotMatched_passMVA_EB->DrawNormalized("hist");
-  c1->cd(3); 
   mc_combFPR03Phot_isNotMatched_passMVA_EB->DrawNormalized("hist");
   data_combFPR03Phot_notPassMVA_EB->DrawNormalized("samepE");
-  c1->SaveAs("dataMC_isoEB.png");
+  c1->SaveAs("dataMC_closure_isoFPR_EB.png");
 
   TCanvas* c2 = new TCanvas("c2", "by def, EB", 1);
-  c2->Divide(2,2);
-  c2->cd(1); mc_combFPR03Phot_isNotMatched_notPassMVA_EB->DrawNormalized("pE");
-  c2->cd(2); mc_combFPR03Phot_isNotMatched_passMVA_EB->DrawNormalized("hist");
-  c2->cd(3); 
   mc_combFPR03Phot_isNotMatched_passMVA_EB->DrawNormalized("hist");
   mc_combFPR03Phot_isNotMatched_notPassMVA_EB->DrawNormalized("pEsame");
-  c2->SaveAs("closure_isoEB.png");
+  c2->SaveAs("closure_isoFPR_EB.png");
 
   TCanvas* c11 = new TCanvas("c11", "closureData EE", 1);
-  c11->Divide(2,2);
-  c11->cd(1); data_combFPR03Phot_notPassMVA_EE->DrawNormalized("pE");
-  c11->cd(2); mc_combFPR03Phot_isNotMatched_passMVA_EE->DrawNormalized("hist");
-  c11->cd(3); 
   mc_combFPR03Phot_isNotMatched_passMVA_EE->DrawNormalized("hist");
   data_combFPR03Phot_notPassMVA_EE->DrawNormalized("samepE");
-  c11->SaveAs("dataMC_isoEE.png");
+  c11->SaveAs("dataMC_closure_isoFPR_EE.png");
 
   TCanvas* c12 = new TCanvas("c12", "by def, EE", 1);
-  c12->Divide(2,2);
-  c12->cd(1); mc_combFPR03Phot_isNotMatched_notPassMVA_EE->DrawNormalized("pE");
-  c12->cd(2); mc_combFPR03Phot_isNotMatched_passMVA_EE->DrawNormalized("hist");
-  c12->cd(3); 
   mc_combFPR03Phot_isNotMatched_passMVA_EE->DrawNormalized("hist");
   mc_combFPR03Phot_isNotMatched_notPassMVA_EE->DrawNormalized("pEsame");
-  c12->SaveAs("closure_isoEE.png");
+  c12->SaveAs("closure_isoFPR_EE.png");
 }

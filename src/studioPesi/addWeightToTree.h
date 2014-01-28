@@ -20,14 +20,6 @@ public :
    // new weight
    float isoW_EB_t;
    float isoW_EE_t;
-   float isoW_EB_pt40_65_t;
-   float isoW_EE_pt40_65_t;
-   float isoW_EB_pt65_90_t;
-   float isoW_EE_pt65_90_t;
-   float isoW_EB_pt90_105_t;
-   float isoW_EE_pt90_105_t;
-   float isoW_EB_pt105_t;
-   float isoW_EE_pt105_t;
 
    // Declaration of leaf types
    UInt_t          sampleIndex;
@@ -40,17 +32,10 @@ public :
    Float_t         ptPhot;
    Int_t           isMatchedPhot;
    Int_t           isIsolatedGenPhot;
-   Int_t           isPassedMVA;
    Float_t         etaPhot;
    Float_t         mvaIdPhot;
    Float_t         combinedPfIso03Phot;
    Float_t         sEtaEtaPhot;
-   Float_t         sEtaPhiPhot;
-   Float_t         scEtawid;
-   Float_t         scPhiwid;
-   Float_t         s4RatioPhot;
-   Float_t         R9Phot;
-   Float_t         sigmaRR;
    Float_t         iso03_gen;
    Float_t         pid_jurECAL03;
    Float_t         pid_twrHCAL03;
@@ -87,17 +72,10 @@ public :
    TBranch        *b_ptPhot;   //!
    TBranch        *b_isMatchedPhot;   //!
    TBranch        *b_isIsolatedGenPhot;   //!
-   TBranch        *b_isPassedMVA;   //!
    TBranch        *b_etaPhot;   //!
    TBranch        *b_mvaIdPhot;   //!
    TBranch        *b_combinedPfIso03Phot;   //!
    TBranch        *b_sEtaEtaPhot;   //!
-   TBranch        *b_sEtaPhiPhot;   //!
-   TBranch        *b_scEtawid;   //!
-   TBranch        *b_scPhiwid;   //!
-   TBranch        *b_s4RatioPhot;   //!
-   TBranch        *b_R9Phot;   //!
-   TBranch        *b_sigmaRR;   //!
    TBranch        *b_iso03_gen;   //!
    TBranch        *b_pid_jurECAL03;   //!
    TBranch        *b_pid_twrHCAL03;   //!
@@ -145,14 +123,14 @@ addWeightToTree::addWeightToTree(TTree *tree) : fChain(0)
     TChain *chain = new TChain("finalTree","");
     
     // G+jets                                                                                                                            
-    // chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/G_Pt*root");
+    chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT135/G_Pt*root");
     // qcd
-    // chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/QCDEM*root");
+    // chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT135/QCDEM*root");
     // data
-    // chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/*2012A*root");
-    // chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/*2012B*root");
-    // chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/*2012C*root");
-    chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/*2012D*root");
+    // chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT135/*2012A*root");
+    // chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT135/*2012B*root");
+    // chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT135/*2012C*root");
+    // chain->Add("/cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT135/*2012D*root");
     
     tree = chain;
   }
@@ -201,17 +179,10 @@ void addWeightToTree::Init(TTree *tree)
   fChain->SetBranchAddress("ptPhot", &ptPhot, &b_ptPhot);
   fChain->SetBranchAddress("isMatchedPhot", &isMatchedPhot, &b_isMatchedPhot);
   fChain->SetBranchAddress("isIsolatedGenPhot", &isIsolatedGenPhot, &b_isIsolatedGenPhot);
-  fChain->SetBranchAddress("isPassedMVA", &isPassedMVA, &b_isPassedMVA);
   fChain->SetBranchAddress("etaPhot", &etaPhot, &b_etaPhot);
   fChain->SetBranchAddress("mvaIdPhot", &mvaIdPhot, &b_mvaIdPhot);
   fChain->SetBranchAddress("combinedPfIso03Phot", &combinedPfIso03Phot, &b_combinedPfIso03Phot);
   fChain->SetBranchAddress("sEtaEtaPhot", &sEtaEtaPhot, &b_sEtaEtaPhot);
-  fChain->SetBranchAddress("sEtaPhiPhot", &sEtaPhiPhot, &b_sEtaPhiPhot);
-  fChain->SetBranchAddress("scEtawid", &scEtawid, &b_scEtawid);
-  fChain->SetBranchAddress("scPhiwid", &scPhiwid, &b_scPhiwid);
-  fChain->SetBranchAddress("s4RatioPhot", &s4RatioPhot, &b_s4RatioPhot);
-  fChain->SetBranchAddress("R9Phot", &R9Phot, &b_R9Phot);
-  fChain->SetBranchAddress("sigmaRR", &sigmaRR, &b_sigmaRR);
   fChain->SetBranchAddress("iso03_gen", &iso03_gen, &b_iso03_gen);
   fChain->SetBranchAddress("pid_jurECAL03", &pid_jurECAL03, &b_pid_jurECAL03);
   fChain->SetBranchAddress("pid_twrHCAL03", &pid_twrHCAL03, &b_pid_twrHCAL03);
@@ -266,14 +237,6 @@ void addWeightToTree::createBranches(TTree* treeWithWeights){
   treeWithWeights->Branch("weight", &weight, "weight/F");
   treeWithWeights->Branch("isoW_EB", &isoW_EB_t, "isoW_EB/F");
   treeWithWeights->Branch("isoW_EE", &isoW_EE_t, "isoW_EE/F");
-  treeWithWeights->Branch("isoW_EB_pt40_65",  &isoW_EB_pt40_65_t,  "isoW_EB_pt40_65/F");
-  treeWithWeights->Branch("isoW_EE_pt40_65",  &isoW_EE_pt40_65_t,  "isoW_EE_pt40_65/F");
-  treeWithWeights->Branch("isoW_EB_pt65_90",  &isoW_EB_pt65_90_t,  "isoW_EB_pt65_90/F");
-  treeWithWeights->Branch("isoW_EE_pt65_90",  &isoW_EE_pt65_90_t,  "isoW_EE_pt65_90/F");
-  treeWithWeights->Branch("isoW_EB_pt90_105", &isoW_EB_pt90_105_t, "isoW_EB_pt90_105/F");
-  treeWithWeights->Branch("isoW_EE_pt90_105", &isoW_EE_pt90_105_t, "isoW_EE_pt90_105/F");
-  treeWithWeights->Branch("isoW_EB_pt105",    &isoW_EB_pt105_t,    "isoW_EB_pt105/F");
-  treeWithWeights->Branch("isoW_EE_pt105",    &isoW_EE_pt105_t,    "isoW_EE_pt105/F");
 }
 
 #endif // #ifdef addWeightToTree_cxx
