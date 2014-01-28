@@ -1,6 +1,4 @@
-#/cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT30/G_Pt-0to15_8TeV_pythia6_hltcut30_hltiso0_mvaWP4.root
 /cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT30/G_Pt-120to170_8TeV_pythia6_hltcut30_hltiso0_mvaWP4.root
-#/cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT30/G_Pt-1400to1800_8TeV_pythia6_hltcut30_hltiso0_mvaWP4.root
 /cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT30/G_Pt-15to30_8TeV_pythia6_hltcut30_hltiso0_mvaWP4.root
 /cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT30/G_Pt-170to300_8TeV_pythia6_hltcut30_hltiso0_mvaWP4.root
 /cmsrm/pc24/crovelli/GammaJets/ridottissime/HLT30/G_Pt-300to470_8TeV_pythia6_hltcut30_hltiso0_mvaWP4.root
