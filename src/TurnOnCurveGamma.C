@@ -114,11 +114,6 @@ void TurnOnCurveGamma::Loop() {
     std::vector<int> preselectPhotons=preselectedPhotons(photons);
     if (preselectPhotons.size()<1) continue;
     
-    // if ( photons.size() != preselectPhotons.size() ) {
-    // cout << "chiara: secondo me c'e' un problema. I fotoni in photons devono essere gia' preselezionati" << endl;
-    // continue;
-    // }
-
     std::vector<int> selectPhotons=selectedPhotons(preselectPhotons);
     if (selectPhotons.size()<1) continue;
       
@@ -325,7 +320,7 @@ std::vector<int> TurnOnCurveGamma::preselectedPhotons(const std::vector<int>& ph
     if ( preselTracker > 50)  continue;
 
     // should be 02, but currently off in the ntuples                                                                                             
-    if (pid_pfIsoCharged03ForCiC_presel[photons[ipho]]>4.) continue;
+    if (pid_pfIsoCharged03ForCiC_presel[photons[ipho]]>5.) continue;        // last preselection we agreed on: cone 0.3, cut at 5GeV
 
     if ( theEAregion<2) {  // EB
       if ( pid_HoverE_presel[photons[ipho]]>0.075 )  continue;
@@ -342,9 +337,9 @@ std::vector<int> TurnOnCurveGamma::preselectedPhotons(const std::vector<int>& ph
 
 std::vector<int> TurnOnCurveGamma::selectedPhotons(const std::vector<int>& photons) {
   
-  std::vector<int> selPhotons;
-  double mva_cut_EB[4] = {0.892656, 0.844931, 0.766479, -1.};//corresponding to sig eff 0.80, 0.90, 0.95, 1.          
-  double mva_cut_EE[4] = {0.871778, 0.778579, 0.601807, -1.};//corresponding to sig eff 0.80, 0.90, 0.95, 1.  
+  std::vector<int> selPhotons;                                        // new WPs by Giulia (Jan 2014)
+  double mva_cut_EB[5] = {0.90774, 0.87602, 0.83548, 0.56862, -1.};   // corresponding to sig eff 0.80, 0.90, 0.95, 0.99, 1.          
+  double mva_cut_EE[5] = {0.92864, 0.90492, 0.87382, 0.5741, -1.};    // "" 
 
   for (int ipho=0;ipho<(int)photons.size();++ipho) {
 
@@ -403,12 +398,10 @@ void TurnOnCurveGamma::SetAllMVA() {
   tmvaReaderID_Single_Endcap->AddSpectator("ptWeight",           &tmva_photonid_ptWeight );
   tmvaReaderID_Single_Endcap->AddSpectator("ptPhot_presel",      &tmva_photonid_pt );
 
-  std::cout << "Booking PhotonID EB MVA with file " 
-	    << "/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EB/TMVAClassification_BDTG.weights.xml" << std::endl;
-  tmvaReaderID_Single_Barrel->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EB/TMVAClassification_BDTG.weights.xml");   
-  std::cout << "Booking PhotonID EE MVA with file " 
-	    << "/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EE/TMVAClassification_BDTG.weights.xml" << std::endl;
-  tmvaReaderID_Single_Endcap->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EE/TMVAClassification_BDTG.weights.xml");   
+  std::cout << "Booking PhotonID EB MVA with file reduced_analysis/doMVA/weights_30_01_14_EB/TMVAClassification_BDTG.weights.xml" << std::endl;
+  tmvaReaderID_Single_Barrel->BookMVA("BDT","/afs/cern.ch/work/c/crovelli/gammaJetsGIT3/CMSSW_5_3_6/src/GammaJets/src/reduced_analysis/doMVA/weights_30_01_14_EB/TMVAClassification_BDTG.weights.xml");
+  std::cout << "Booking PhotonID EE MVA with file reduced_analysis/doMVA/weights_30_01_14_EE/TMVAClassification_BDTG.weights.xml" << std::endl;
+  tmvaReaderID_Single_Endcap->BookMVA("BDT","/afs/cern.ch/work/c/crovelli/gammaJetsGIT3/CMSSW_5_3_6/src/GammaJets/src/reduced_analysis/doMVA/weights_30_01_14_EE/TMVAClassification_BDTG.weights.xml");
 
   isMVAinitialized=true;
   return;
