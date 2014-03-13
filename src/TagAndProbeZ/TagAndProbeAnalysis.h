@@ -52,6 +52,8 @@ public :
    Float_t         pu_weight50;
    Float_t         pu_weight75;
    Float_t         pu_weight90;
+   Float_t         pu_weight135;
+   Float_t         pu_weight150;
    Float_t         rhoAllJets;
    Float_t         rhoPF;
    Int_t           nEleMC;
@@ -205,6 +207,8 @@ public :
    TBranch        *b_pu_weight50;   //!
    TBranch        *b_pu_weight75;   //!
    TBranch        *b_pu_weight90;   //!
+   TBranch        *b_pu_weight135;   //!
+   TBranch        *b_pu_weight150;   //!
    TBranch        *b_rhoAllJets;   //!
    TBranch        *b_rhoPF;   //!
    TBranch        *b_nEleMC;   //!
@@ -355,6 +359,8 @@ public :
    bool     isHLT_50();
    bool     isHLT_75();
    bool     isHLT_90();
+   bool     isHLT_135();
+   bool     isHLT_150();
 
    void     readR9Weights();
 
@@ -437,6 +443,8 @@ void TagAndProbeAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("pu_weight50", &pu_weight50, &b_pu_weight50);
    fChain->SetBranchAddress("pu_weight75", &pu_weight75, &b_pu_weight75);
    fChain->SetBranchAddress("pu_weight90", &pu_weight90, &b_pu_weight90);
+   fChain->SetBranchAddress("pu_weight135", &pu_weight135, &b_pu_weight135);
+   fChain->SetBranchAddress("pu_weight150", &pu_weight150, &b_pu_weight150);
    fChain->SetBranchAddress("rhoAllJets", &rhoAllJets, &b_rhoAllJets);
    fChain->SetBranchAddress("rhoPF", &rhoPF, &b_rhoPF);
    fChain->SetBranchAddress("nEleMC", &nEleMC, &b_nEleMC);

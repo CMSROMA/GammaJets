@@ -24,12 +24,6 @@
 
 #include "TMVA/Reader.h"
 
-
-//#include "TagAndProbeRedTreeVariables.h"
-//#include "fillPlot_paolo.h"
-
-
-
 using std::string;
 using std::vector;
 
@@ -41,7 +35,6 @@ class TagAndProbeTree : public tree_reader_V9 {
 public:
   
   TagAndProbeTree(TTree *tree=0, const TString& outname="redntp.root");
-  //virtual ~TagAndProbeTree(){};
   virtual ~TagAndProbeTree();
   virtual void     Loop();
   void SetJsonFile(const char* json) { jsonFile = json; };
@@ -127,6 +120,8 @@ private:
    Float_t         pu_weight50;
    Float_t         pu_weight75;
    Float_t         pu_weight90;
+   Float_t         pu_weight135;
+   Float_t         pu_weight150;
    Float_t         r9_weight[20]; //nPhot
    //Float_t         rhoAllJets;
    //Float_t         rhoPF;
@@ -1046,6 +1041,8 @@ private:
   std::vector<Double_t> puweights50_;
   std::vector<Double_t> puweights75_;
   std::vector<Double_t> puweights90_;
+  std::vector<Double_t> puweights135_;
+  std::vector<Double_t> puweights150_;
 
   float r9_weight_[20];
 

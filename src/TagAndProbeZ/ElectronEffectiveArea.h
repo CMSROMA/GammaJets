@@ -76,17 +76,18 @@ class ElectronEffectiveArea{
         return 0.0;
       }
 
-      //2012 Data Effective Areas 
+      // 2012 Data Effective Areas 
       // see: https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaEARhoCorrection
-      //EA gamma+neutral had. estimated on Z->ee in DATA 2012 with <ICHEP dataset (~2 fb-1 at 8 TeV ).
+      // EA gamma+neutral had. estimated on Z->ee in DATA 2012 with <HCP dataset
+      // cone dR=0.3
 
-      if (fabs(SCEta) >= 0.0 && fabs(SCEta) < 1.0 ) EffectiveArea = 0.10;
-      if (fabs(SCEta) >= 1.0 && fabs(SCEta) < 1.479 ) EffectiveArea = 0.12;
-      if (fabs(SCEta) >= 1.479 && fabs(SCEta) < 2.0 ) EffectiveArea = 0.085;
-      if (fabs(SCEta) >= 2.0 && fabs(SCEta) < 2.2 ) EffectiveArea = 0.11;
-      if (fabs(SCEta) >= 2.2 && fabs(SCEta) < 2.3 ) EffectiveArea = 0.12;
-      if (fabs(SCEta) >= 2.3 && fabs(SCEta) < 2.4 ) EffectiveArea = 0.12;
-      if (fabs(SCEta) >= 2.4) EffectiveArea = 0.13;
+      if (fabs(SCEta) >= 0.0 && fabs(SCEta) < 1.0 ) EffectiveArea = 0.13;
+      if (fabs(SCEta) >= 1.0 && fabs(SCEta) < 1.479 ) EffectiveArea = 0.14;
+      if (fabs(SCEta) >= 1.479 && fabs(SCEta) < 2.0 ) EffectiveArea = 0.07;
+      if (fabs(SCEta) >= 2.0 && fabs(SCEta) < 2.2 ) EffectiveArea = 0.09;
+      if (fabs(SCEta) >= 2.2 && fabs(SCEta) < 2.3 ) EffectiveArea = 0.11;
+      if (fabs(SCEta) >= 2.3 && fabs(SCEta) < 2.4 ) EffectiveArea = 0.11;
+      if (fabs(SCEta) >= 2.4) EffectiveArea = 0.14;
       
       return EffectiveArea;  
     }
