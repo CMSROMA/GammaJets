@@ -1107,6 +1107,8 @@ void TagAndProbeTree::bookOutputTree()
   ana_tree->Branch("pu_weight50",&pu_weight50,"pu_weight50/F");
   ana_tree->Branch("pu_weight75",&pu_weight75,"pu_weight75/F");
   ana_tree->Branch("pu_weight90",&pu_weight90,"pu_weight90/F");
+  ana_tree->Branch("pu_weight135",&pu_weight135,"pu_weight135/F");
+  ana_tree->Branch("pu_weight150",&pu_weight150,"pu_weight150/F");
 
   ana_tree->Branch("nPhot", &nPhot, "nPhot/I");
   ana_tree->Branch("r9_weight",r9_weight,"r9_weight[nPhot]/F");
