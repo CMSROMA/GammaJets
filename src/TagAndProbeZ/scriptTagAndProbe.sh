@@ -129,7 +129,7 @@ fi
 
 
 echo dir is ${CMSSW_BASE} 
-echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13}
+echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14} ${15}
 # $1   --->   ${PWD} 
 # $2   --->   ${PWD}/${listfile} 
 # $3   --->   ${rootfile} 
@@ -140,16 +140,13 @@ echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13}
 # $8   --->   ${puweight_HLT50}
 # $9   --->   ${puweight_HLT75}
 # $10   --->   ${puweight_HLT90}
-# $11   --->   ${r9weight} 
+# $11   --->   ${puweight_HLT135}
+# $12   --->   ${puweight_HLT150}
+# $13   --->   ${r9weight} 
+# $14   --->   ${photonIDweights_EB} 
+# $15   --->   ${photonIDweights_EE}
 
-# $12   --->   ${energyCorrection} 
-# $13   --->   ${photonIDweights_EB} 
-# $14   --->   ${photonIDweights_EE}
-
-echo file2 is ${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13}
-
-#echo ${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 
-#echo ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/tagandprobeApp_forMVA $2 ${filename} #$4 ${8} ${9} $5 $6 $7 
+echo file2 is ${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14} ${15}
 
 if [ ! -f  ${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp ]; then
     echo "Executable  ${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp not found. Exit"
@@ -158,8 +155,7 @@ fi
 
 pwd
 
-${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13}
-#${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/tagandprobeApp_forMVA $2 ${filename} #$4 $8 $9 $5 $6 $7 
+${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14} ${15}
 
 exit_stat=$?
 

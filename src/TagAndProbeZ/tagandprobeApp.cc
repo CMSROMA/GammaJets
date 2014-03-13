@@ -30,9 +30,9 @@ int main(int argc, char* argv[]) {
 
   std::cout << "Arguments passed " << argc << std::endl;
   //================ Parameters 
-  if(argc<2 || argc>13) {
+  if(argc<2 || argc>15) {
     //    cout << "Usage:  ./tmp/tagandprobeApp listfile outputfile jsonfile(optional) puweight(optional) scaleCorrections(optional)\n" 
-    cout << "Usage:  ./tmp/tagandprobeApp listfile outputfile jsonfile(optional) puweight(optional) puweight_HLT30(optional) puweight_HLT50(optional) puweight_HLT75(optional) puweight_HLT90(optional) r9weight(optional) scaleCorrections(optional)\n"
+    cout << "Usage:  ./tmp/tagandprobeApp listfile outputfile jsonfile(optional) puweight(optional) puweight_HLT30(optional) puweight_HLT50(optional) puweight_HLT75(optional) puweight_HLT90(optional) puweight_HLT135(optional) puweight_HLT150(optional) r9weight(optional)\n"
 	 << "  listfile:    list of root files incusing protocol eg dcap:/// .....\n"
 	 << "  outputfile:  name of output root file  eg output.root\n"
 	 << "  jsonfile: jsonfile used to select RUN/LS when looping over data. -1 if not used\n"
@@ -41,6 +41,8 @@ int main(int argc, char* argv[]) {
          << "  puweight_HLT50: puweight for MC nPU reweighting corresponding to HLT50 selected data. -1 if not used\n"
          << "  puweight_HLT75: puweight for MC nPU reweighting corresponding to HLT75 selected data. -1 if not used\n"
          << "  puweight_HLT90: puweight for MC nPU reweighting corresponding to HLT90 selected data. -1 if not used\n" 
+         << "  puweight_HLT135: puweight for MC nPU reweighting corresponding to HLT135 selected data. -1 if not used\n" 
+         << "  puweight_HLT150: puweight for MC nPU reweighting corresponding to HLT150 selected data. -1 if not used\n" 
          << "  r9weight: r9weight for MC and data reweighting. -1 if not used\n" 
 	 << "  EB weights for MVA\n"
 	 << "  EE weights for MVA\n"
@@ -132,27 +134,30 @@ int main(int argc, char* argv[]) {
      cout << "SetPuWeightsHLT, 90" << endl;
      tool.SetPuWeightsHLT(std::string(argv[8]),90);
   }
+
   if (argc>9 && std::string(argv[9]) != "-1") {
-     cout << "SetR9Weights" << endl;
-     tool.SetR9Weights(std::string(argv[9]));
-  }
-  if (argc>10 && std::string(argv[10]) != "-1") {
-     cout << "Set EB photon ID MVa" << endl;
-     tool.photonLevelNewIDMVA_EB=std::string(argv[10]);
-  }
-  if (argc>11 && std::string(argv[11]) != "-1") {
-     cout << "Set EE photon ID MVa" << endl;
-     tool.photonLevelNewIDMVA_EE=std::string(argv[11]);
+     cout << "SetPuWeightsHLT, 135" << endl;
+     tool.SetPuWeightsHLT(std::string(argv[9]),135);
   }
 
-  /*
-  if (argc>9 && std::string(argv[9]) != "-1") {
-    TString scaleCorrectionFile(argv[9]);
-    if (scaleCorrectionFile!="")
-    tool.setEnergyScaleCorrections(scaleCorrectionFile,"Hgg_eta_R9");
+  if (argc>10 && std::string(argv[10]) != "-1") {
+     cout << "SetPuWeightsHLT, 150" << endl;
+     tool.SetPuWeightsHLT(std::string(argv[10]),150);
   }
-  */
-  
+
+  if (argc>11 && std::string(argv[11]) != "-1") {
+     cout << "SetR9Weights" << endl;
+     tool.SetR9Weights(std::string(argv[11]));
+  }
+  if (argc>12 && std::string(argv[12]) != "-1") {
+     cout << "Set EB photon ID MVa" << endl;
+     tool.photonLevelNewIDMVA_EB=std::string(argv[12]);
+  }
+  if (argc>13 && std::string(argv[13]) != "-1") {
+     cout << "Set EE photon ID MVa" << endl;
+     tool.photonLevelNewIDMVA_EE=std::string(argv[13]);
+  }
+
   std::cout << "DONE with settings starting loop" << std::endl;
   
   tool.Loop();}
