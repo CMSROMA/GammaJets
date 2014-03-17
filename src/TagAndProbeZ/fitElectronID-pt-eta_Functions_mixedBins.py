@@ -44,7 +44,8 @@ options.register ('efficiencyType',
                   "which efficiency do you want?")
 
 options.register ('ptBins',
-                  '20, 30, 40, 50, 200',
+                  #'20, 30, 40, 50, 200',
+                  '40, 50, 70, 200',
                   VarParsing.multiplicity.singleton,
                   VarParsing.varType.string,
                   "ptBins")
@@ -84,9 +85,6 @@ for file in [ line.strip() for line in open(options.fileList,'r') if not line.st
     print file
     INPUTFILE.append(file)
 
-#if TYPE  == 'MC'    : INPUTFILE = "root://pccmsrm27.cern.ch///cms/local/meridian/GammaJets/TandP/DYJetsToLL_M-50_madgraph_tagTight_HLT.root"
-#if TYPE  == 'DATA'  : INPUTFILE = "/afs/cern.ch/user/c/crovelli/myWorkspace/gammaJets/CMSSW_5_3_6/src/GammaJets/src/TagAndProbeZ/outFile_DoubleElectron_tagTight.root"
-
 process.TnP_MuonID = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     NumCPU = cms.uint32(4),
     SaveWorkspace = cms.bool(True),
@@ -121,12 +119,9 @@ process.TnP_MuonID = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         okMediumEleID = cms.vstring("okMediumEleID","dummy[pass=1,fail=0]"),  
         okTightEleID = cms.vstring("okTightEleID","dummy[pass=1,fail=0]"),  
     
-    okMVA_005 = cms.vstring("okMVA_005","dummy[pass=1,fail=0]"),
-    okMVA_01 = cms.vstring("okMVA_01","dummy[pass=1,fail=0]"),
-    okMVA_02 = cms.vstring("okMVA_02","dummy[pass=1,fail=0]"),
-
-        # chiara: questo sarebbe da mettere
-        # tag_HLT_HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC8_Mass30_TagLeg = cms.vstring("legTag1","dummy[pass=1,fail=0]"),
+        okMVA_005 = cms.vstring("okMVA_005","dummy[pass=1,fail=0]"),
+        okMVA_01 = cms.vstring("okMVA_01","dummy[pass=1,fail=0]"),
+        okMVA_02 = cms.vstring("okMVA_02","dummy[pass=1,fail=0]"),
     ),
 
     PDFs = cms.PSet(
