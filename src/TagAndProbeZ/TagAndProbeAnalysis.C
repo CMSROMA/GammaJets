@@ -393,7 +393,7 @@ bool TagAndProbeAnalysis::isHLT_135() {
   return isok;
 }
 
-bool GammaJetAnalysis::isHLT_150() {
+bool TagAndProbeAnalysis::isHLT_150() {
 
   bool isok = false;
   for (int ii=0; ii<(int)firedHLTNames->size(); ii++) {
