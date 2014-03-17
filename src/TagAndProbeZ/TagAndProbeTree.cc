@@ -30,9 +30,6 @@ TagAndProbeTree::TagAndProbeTree(TTree *tree, const TString& outname) : tree_rea
   NtotEvents = -1;
   SampleID = -1;
   gen_=new TRandom3(0);
-  
-  //tmvaReaderID_Single_Endcap=0;
-  //tmvaReaderID_Single_Barrel=0;
 }
 
 TagAndProbeTree::~TagAndProbeTree() {
@@ -66,12 +63,7 @@ vector<int> TagAndProbeTree::firstones(Float_t *vec, vector<bool> *asso, int num
   return themax;
 }
 
-
-
-
 void TagAndProbeTree::Loop() {
-
-
 
   if (fChain == 0) return;
   
@@ -271,9 +263,6 @@ void TagAndProbeTree::Loop() {
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     
-  
-    //if (scaleCorrections_) correctPhotons(true);
-    
     // print name of current file
     currfilename = TString(fChain->GetCurrentFile()->GetName());
     if(currfilename != foldname) {
@@ -285,15 +274,12 @@ void TagAndProbeTree::Loop() {
       foldname = currfilename;
     }
 
-
     if (nprocessed%1000 == 0) cout << "Events " << nprocessed << " processed; Run " << run << " LS " << lbn << endl;
     nprocessed++;
     
-
     if (myjson && nMC<=0) 
       if (!myjson->isGoodLS(run,lbn)) continue;
     
-
     int nGenElectrons(0);
     int isElectronFromZ[nMC];
     int isElectronFromZIndex[nMC];
@@ -305,7 +291,6 @@ void TagAndProbeTree::Loop() {
     float s4Ratio_phot[nPhot];
     float sigmaRR[nPhot];     
    
-
     nEleMC=0;
 
     /**********************************
@@ -343,6 +328,16 @@ void TagAndProbeTree::Loop() {
 	pu_weight90 = puweights90_[npu];
       else
 	pu_weight90 = 1.;
+
+      if(puweights135_.size()>0)
+	pu_weight135 = puweights135_[npu];
+      else
+	pu_weight135 = 1.;
+
+      if(puweights150_.size()>0)
+	pu_weight150 = puweights150_[npu];
+      else
+	pu_weight150 = 1.;
     }
 
     /**********************************
@@ -354,8 +349,6 @@ void TagAndProbeTree::Loop() {
     //nbin of r9weights histogram is 2100
     const int nbins_r9weight = 2100;
     const double binwidth_r9weight = 5.00000000000000010e-04;
-
-
 
     for(int iPhot=0; iPhot<nPhot; iPhot++){
       
@@ -378,7 +371,6 @@ void TagAndProbeTree::Loop() {
       }
       
     }     
-
 
     //cout << "set weight" << endl;
     float weight=pu_weight;
@@ -431,7 +423,7 @@ void TagAndProbeTree::Loop() {
 	
 	r9Phot[i]      = E9Phot[i] / escRawPhot[i];
 	s4RatioPhot[i] = E4Phot[i] / E25Phot[i];
-	sigmaRRPhot[i]      = TMath::Sqrt(rr2);	
+	sigmaRRPhot[i] = TMath::Sqrt(rr2);	
 	
 	//Applying ClusterShapes corrections for photonID shower shapes in MC
 	ClusterShape(&i, &pid_etawid[i], &pid_scetawid[i], &pid_scphiwid[i], &r9Phot[i], &s4RatioPhot[i]);
@@ -481,7 +473,7 @@ void TagAndProbeTree::Loop() {
       //cout << "generator level matching" <<endl;
       /*---------------------------------------------------------------
 	
-                         Generator level matching
+      Generator level matching
       
       ---------------------------------------------------------------*/
       /// init of mc related variables
@@ -515,8 +507,6 @@ void TagAndProbeTree::Loop() {
 	  phiEleMC[nEleMC]=phiMC[i];   
 	  nEleMC++;
 	}
-	
-
       }
       
       for(int i =0; i<nMC; i++)
@@ -568,8 +558,6 @@ void TagAndProbeTree::Loop() {
     Tag&Probe tags for electrons and photons
     
     ---------------------------------------------------------------*/
-    //cout << "saving variables in tree" << endl;
-
     bool atLeastOneTag=false;
     
     for(int j=0; j<nEle; j++) 
@@ -644,37 +632,33 @@ void TagAndProbeTree::Loop() {
   elegen1.Write();
 }
 
-  
+// modified to match the current preselection applied in SingleGammaTree_giulia
 bool TagAndProbeTree::PhotonMITPreSelection( int photon_index, int vertex_index, bool electronVeto) {
 
   int photon_category = PhotonCategory(photon_index);
 
-  float mitCuts_hoe[4]                 = {0.082,0.075,0.075,0.075};                                        
-  float mitCuts_sieie[4]               = {0.014,0.014,0.034,0.034};                                        
-  float mitCuts_ecaliso[4]             = {50,4,50,4};                                                      
-  float mitCuts_hcaliso[4]             = {50,4,50,4};                                                      
-  float mitCuts_trkiso[4]              = {50,4,50,4};                                                      
-  //float mitCuts_hcalecal[4]            = {3,3,3,3};                                                        
-  //float mitCuts_abstrkiso[4]           = {2.8,2.8,2.8,2.8};                                                
-  //float mitCuts_trkiso_hollow03[4]     = {4,4,4,4};                                                       
-  //float mitCuts_drtotk_25_99[4]	= {0.26,0.029,0.0062,0.0055};
-  float mitCuts_pfiso[4]               = {4,4,4,4};
+  float mitCuts_hoe[4]                 = {0.075,0.075,0.075,0.075};
+  float mitCuts_sieie[4]               = {0.014,0.014,0.034,0.034};
+
+  // Applyling looser preselection for nonISO triggers                                                                 
+  float mitCuts_ecaliso[4]             = {50,50,50,50};
+  float mitCuts_hcaliso[4]             = {50,50,50,50};
+  float mitCuts_trkiso[4]              = {50,50,50,50};
+
+  // should be 4GeV, but we use 5GeV since we changed the cone size
+  float mitCuts_pfiso[4]               = {5,5,5,5};
   
-  float val_hoe        = pid_HoverE[photon_index];
-  float val_sieie      = pid_etawid[photon_index];                                                          
+  float val_hoe     = pid_HoverE[photon_index];
+  float val_sieie   = pid_etawid[photon_index];                                                          
   float val_ecaliso = pid_jurECAL03[photon_index] - 0.012*ptPhot[photon_index];                              
   float val_hcaliso = pid_twrHCAL03[photon_index] - 0.005*ptPhot[photon_index]; 
   float val_trkiso  = pid_hlwTrack03[photon_index] - 0.002*ptPhot[photon_index]; 
   
-  //float val_hcalecal   = (pho_ecalsumetconedr03[photon_index]+pho_hcalsumetconedr03[photon_index]-rho_algo1*rhofac);                                             
-  //float val_abstrkiso  = (*pho_tkiso_recvtx_030_002_0000_10_01)[photon_index][vertex_index];                
-  //float val_trkiso_hollow03 = pho_trksumpthollowconedr03[photon_index];                                    
-  //float val_drtotk_25_99 = pho_drtotk_25_99[photon_index];
   int val_pho_isconv = !hasMatchedPromptElePhot[photon_index];
-  float val_pfiso02 = pid_pfIsoCharged02ForCiC[photon_index][vertex_index];
 
-  
-      
+  // should be 02, but currently off in the ntuples                                                               
+  float val_pfiso03 = pid_pfIsoCharged03ForCiC[photon_index][vertex_index];
+
   if (val_hoe             >= mitCuts_hoe[photon_category]         ) return false;                                           
   if (val_sieie           >= mitCuts_sieie[photon_category]       ) return false;
   if (val_ecaliso         >= mitCuts_ecaliso[photon_category]     ) return false;
@@ -683,11 +667,11 @@ bool TagAndProbeTree::PhotonMITPreSelection( int photon_index, int vertex_index,
   
   if ((!val_pho_isconv && electronVeto) ) return false; // Electron Rejection based Conversion Safe Veto
 
-  if (val_pfiso02 >= mitCuts_pfiso[photon_category]) return false;            
+  // should be 02 with cut at 4, but currently off in the ntuples: use 0.3 and cut at 5
+  if (val_pfiso03 >= mitCuts_pfiso[photon_category]) return false;            
   
   return true;
 }
-
 
 void TagAndProbeTree::SetR9Weights(std::string r9WeightFile)
 {
@@ -713,7 +697,6 @@ void TagAndProbeTree::SetR9Weights(std::string r9WeightFile)
     return;
   }
   
-
   for(int i=0; i<2100; i++){
     vec_r9_weight_EB[i] = 1.;
     vec_r9_weight_EE[i] = 1.;
@@ -722,9 +705,7 @@ void TagAndProbeTree::SetR9Weights(std::string r9WeightFile)
     vec_r9_weight_EE[i] = r9weights_EE->GetBinContent(i+1);
 
     cout << "vec_r9_weight_EB[" << i << "] = " << vec_r9_weight_EB[i] << endl;
-
   }
-
 }
 
 void TagAndProbeTree::SetPuWeights(std::string puWeightFile)
@@ -801,15 +782,14 @@ void TagAndProbeTree::SetPuWeightsHLT(std::string puWeightFileHLT, int hltThresh
     float weight=1.;
     weight=weights->GetBinContent(i+1);
     sumPuWeights+=weight;
-    if (hltThresh==30) puweights30_.push_back(weight);
-    if (hltThresh==50) puweights50_.push_back(weight);
-    if (hltThresh==75) puweights75_.push_back(weight);
-    if (hltThresh==90) puweights90_.push_back(weight);
+    if (hltThresh==30)  puweights30_.push_back(weight);
+    if (hltThresh==50)  puweights50_.push_back(weight);
+    if (hltThresh==75)  puweights75_.push_back(weight);
+    if (hltThresh==90)  puweights90_.push_back(weight);
+    if (hltThresh==135) puweights135_.push_back(weight);
+    if (hltThresh==150) puweights150_.push_back(weight);
   }
 }
-
-
-
 
 void TagAndProbeTree::ClusterShape(Int_t* i, Float_t* tmva_photonid_sieie, Float_t* tmva_photonid_etawidth, Float_t* tmva_photonid_phiwidth, Float_t* tmva_photonid_r9, Float_t* tmva_photonid_s4ratio)
 {
@@ -862,8 +842,6 @@ void TagAndProbeTree::ClusterShape(Int_t* i, Float_t* tmva_photonid_sieie, Float
 	*tmva_photonid_phiwidth =  0.99992*(*tmva_photonid_phiwidth) - 0.00000048;
       }
     }
-
-
 }
 
 
@@ -886,17 +864,11 @@ bool TagAndProbeTree::leptonCutsEle2012(int i, electronidcuts2012 const& pid, ve
     eta   = fabs(electron_sc_eta[i]) < pid.eta;
     crack = fabs(electron_sc_eta[i]) < pid.crack1 || fabs(electron_sc_eta[i]) > pid.crack2;
     
-    ////////////////////////////////////////////////////////////////////
     // impact parameters                                                                                                                     
-    //  float d0Ele = eleDxyPV(i,vrankPhotonPairs[0]);
-    //  float dzEle = eleDzPV(i,vrankPhotonPairs[0]); 
     float d0Ele = eleDxyPV(i,0);
     float dzEle = eleDzPV(i, 0); 
     
-    //  cout << "vrankPhotonPairs[0] = " << vrankPhotonPairs[0] << endl;
-    
-    
-    // effective areas - chiara: ancora da controllare. Va usato 2012 x area effettiva o 2011? quale somma prendo?
+    // effective areas
     float abseta = fabs(electron_sc_eta[i]);
     ElectronEffectiveArea::ElectronEffectiveAreaType effAreaGammaAndNeutralHad_ = ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03;
     ElectronEffectiveArea::ElectronEffectiveAreaTarget effAreaTarget_   = ElectronEffectiveArea::kEleEAData2012;
@@ -905,8 +877,6 @@ bool TagAndProbeTree::leptonCutsEle2012(int i, electronidcuts2012 const& pid, ve
     // isolation                                                                                                                             
     float theIsolation = electron_chHad03Iso[i];
     theIsolation += max<float>(0.,(electron_nHad03Iso[i]+electron_phot03Iso[i]-eff_area_ganh*rhoAllJets));
-    
-    
     
     // full selection                                                                                                                        
     if (abseta<1.4442) {
@@ -952,8 +922,6 @@ bool TagAndProbeTree::leptonCutsEle2012(int i, electronidcuts2012 const& pid, ve
   
     return (pt && eta && crack && setaeta && deta && dphi && hoe && oeMop && d0 && dz && minhits && matchconv && isol);
 }
-
-
 
 bool TagAndProbeTree::photonIDCuts2012(int i, photonidcuts2012 const& pid, vector<bool> *vpass) {
 //bool TagAndProbeTree::photonIDCuts2012(int i, photonidcuts2012 const& pid, ) {
@@ -1051,18 +1019,9 @@ Float_t TagAndProbeTree::PhotonIDMVA(Int_t i) {
 
   Float_t mva = 999.;
 
-//   float rr2 = 0;
-//   rr2=pid_esXwidth[i]*pid_esXwidth[i]+pid_esYwidth[i]*pid_esYwidth[i];
-//   //tmva_photonid_ESEffSigmaRR = 0.0; 
-//   float rr = TMath::Sqrt(rr2); 
-
-//   float r9phot = E9Phot[i] / escRawPhot[i];
-//   float s4phot = E4Phot[i] / E25Phot[i];
-  
-
   tmva_photonid_etawidth     = pid_scetawid[i];
   tmva_photonid_phiwidth     = pid_scphiwid[i];
-  tmva_photonid_sieie        = pid_etawid[i];
+  tmva_photonid_sieie        = pid_etawid[i];  
   tmva_photonid_sieip        = sEtaPhiPhot[i];
   tmva_photonid_s4ratio      = s4RatioPhot[i];
   tmva_photonid_r9           = r9Phot[i];
@@ -1071,8 +1030,7 @@ Float_t TagAndProbeTree::PhotonIDMVA(Int_t i) {
   tmva_photonid_rr           = 0.0; 
   tmva_photonid_eventrho     = rhoAllJets;
   
-  tmva_photonid_rr = sigmaRRPhot[i];
-
+  tmva_photonid_rr = sigmaRRPhot[i];    
 
   bool isEBphot = true;
   if (fabs(etascPhot[i])>1.479) isEBphot = false; 
@@ -1081,8 +1039,7 @@ Float_t TagAndProbeTree::PhotonIDMVA(Int_t i) {
     mva = tmvaReaderID_Single_Barrel->EvaluateMVA("BDT");
   else
     mva = tmvaReaderID_Single_Endcap->EvaluateMVA("BDT");
-  
-  //  cout << "mva : " << mva << endl;
+
   return mva;
 }
 
@@ -1096,7 +1053,6 @@ void TagAndProbeTree::SetAllMVA() {
   tmvaReaderID_Single_Barrel->AddVariable("sEtaPhiPhot_presel",  &tmva_photonid_sieip );
   tmvaReaderID_Single_Barrel->AddVariable("s4RatioPhot_presel",  &tmva_photonid_s4ratio );
   tmvaReaderID_Single_Barrel->AddVariable("r9Phot_presel",       &tmva_photonid_r9 );
-  //tmvaReaderID_Single_Barrel->AddVariable("ptPhot_presel",       &tmva_photonid_pt );
   tmvaReaderID_Single_Barrel->AddVariable("etascPhot_presel",    &tmva_photonid_sceta );
   tmvaReaderID_Single_Barrel->AddVariable("rhoAllJets",          &tmva_photonid_eventrho );
   tmvaReaderID_Single_Barrel->AddSpectator("nPhot_presel",       &tmva_photonid_nPhot );
@@ -1112,7 +1068,6 @@ void TagAndProbeTree::SetAllMVA() {
   tmvaReaderID_Single_Endcap->AddVariable("sEtaPhiPhot_presel",  &tmva_photonid_sieip );
   tmvaReaderID_Single_Endcap->AddVariable("s4RatioPhot_presel",  &tmva_photonid_s4ratio );
   tmvaReaderID_Single_Endcap->AddVariable("r9Phot_presel",       &tmva_photonid_r9 );
-  //tmvaReaderID_Single_Endcap->AddVariable("ptPhot_presel",       &tmva_photonid_pt );
   tmvaReaderID_Single_Endcap->AddVariable("etascPhot_presel",    &tmva_photonid_sceta );
   tmvaReaderID_Single_Endcap->AddVariable("rhoAllJets",          &tmva_photonid_eventrho );
   tmvaReaderID_Single_Endcap->AddVariable("rr_presel",           &tmva_photonid_rr );
@@ -1121,18 +1076,10 @@ void TagAndProbeTree::SetAllMVA() {
   tmvaReaderID_Single_Endcap->AddSpectator("ptWeight",           &tmva_photonid_ptWeight );
   tmvaReaderID_Single_Endcap->AddSpectator("ptPhot_presel",      &tmva_photonid_pt );
 
-  /*
-    std::cout << "Booking PhotonID EB MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml" << endl;
-    tmvaReaderID_Single_Barrel->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml");
-    std::cout << "Booking PhotonID EE MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml" << endl;
-    tmvaReaderID_Single_Endcap->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml");
-  */
-  
   std::cout << "Booking PhotonID EB MVA with file " << photonLevelNewIDMVA_EB << endl;
   tmvaReaderID_Single_Barrel->BookMVA("BDT",photonLevelNewIDMVA_EB);
   std::cout << "Booking PhotonID EE MVA with file " << photonLevelNewIDMVA_EE  << endl;
   tmvaReaderID_Single_Endcap->BookMVA("BDT",photonLevelNewIDMVA_EE);
-  
 }
 
 void TagAndProbeTree::bookOutputTree()
@@ -1160,6 +1107,8 @@ void TagAndProbeTree::bookOutputTree()
   ana_tree->Branch("pu_weight50",&pu_weight50,"pu_weight50/F");
   ana_tree->Branch("pu_weight75",&pu_weight75,"pu_weight75/F");
   ana_tree->Branch("pu_weight90",&pu_weight90,"pu_weight90/F");
+  ana_tree->Branch("pu_weight135",&pu_weight135,"pu_weight135/F");
+  ana_tree->Branch("pu_weight150",&pu_weight150,"pu_weight150/F");
 
   ana_tree->Branch("nPhot", &nPhot, "nPhot/I");
   ana_tree->Branch("r9_weight",r9_weight,"r9_weight[nPhot]/F");

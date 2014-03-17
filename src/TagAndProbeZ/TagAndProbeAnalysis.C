@@ -16,16 +16,18 @@ void TagAndProbeAnalysis::Loop()
   readR9Weights();
   
   // output file
-  TFile *outFile[5];
+  TFile *outFile[7];
   outFile[0] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+".root","RECREATE");
   outFile[1] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"30.root","RECREATE");
   outFile[2] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"50.root","RECREATE");
   outFile[3] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"75.root","RECREATE");
   outFile[4] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"90.root","RECREATE");
+  outFile[5] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"135.root","RECREATE");
+  outFile[6] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"150.root","RECREATE");
 
   // output trees declaration
-  TTree *myTree[5];
-  for (int ii=0; ii<5; ii++) {
+  TTree *myTree[7];
+  for (int ii=0; ii<7; ii++) {
     outFile[ii]->cd();
     TDirectory* outputDirectory = outFile[ii]->mkdir("myTaPDir");
     outputDirectory->cd();
@@ -40,7 +42,7 @@ void TagAndProbeAnalysis::Loop()
   float r9weight_EB;
   float r9weight_EE;
   float puW;
-  float puW30, puW50, puW75, puW90;  
+  float puW30, puW50, puW75, puW90, puW135, puW150;  
   int okLooseElePtEta,  okLooseEleID;
   int okMediumElePtEta, okMediumEleID; 
   int okTightElePtEta,  okTightEleID; 
@@ -51,10 +53,10 @@ void TagAndProbeAnalysis::Loop()
   float probe_s4Ratio, probe_etasc;
   float probe_rr;
   float probe_mvaId;
+  float probe_charged03,      probe_neutral03,      probe_photon03;         
   float probe_fprCharged03,   probe_fprNeutral03,   probe_fprPhoton03;
   float probe_fprRCCharged03, probe_fprRCNeutral03, probe_fprRCPhoton03;
-  // float probe_fprCharged04,   probe_fprNeutral04,   probe_fprPhoton04;
-  // float probe_fprRCCharged04, probe_fprRCNeutral04, probe_fprRCPhoton04;
+
 
   for (int ii=0; ii<5; ii++) {
     myTree[ii] -> Branch("mass",&mass,"mass/F");
@@ -71,29 +73,26 @@ void TagAndProbeAnalysis::Loop()
     myTree[ii] -> Branch("probe_etasc",&probe_etasc,"probe_etasc/F");
     myTree[ii] -> Branch("probe_rr",&probe_rr,"probe_rr/F");
     myTree[ii] -> Branch("probe_mvaId",&probe_mvaId,"probe_mvaId/F"); 
+    myTree[ii] -> Branch("probe_charged03",&probe_charged03,"probe_charged03/F"); 
+    myTree[ii] -> Branch("probe_neutral03",&probe_neutral03,"probe_neutral03/F"); 
+    myTree[ii] -> Branch("probe_photon03", &probe_photon03, "probe_photon03/F"); 
     myTree[ii] -> Branch("probe_fprCharged03",&probe_fprCharged03,"probe_fprCharged03/F"); 
     myTree[ii] -> Branch("probe_fprNeutral03",&probe_fprNeutral03,"probe_fprNeutral03/F"); 
     myTree[ii] -> Branch("probe_fprPhoton03", &probe_fprPhoton03, "probe_fprPhoton03/F"); 
     myTree[ii] -> Branch("probe_fprRCCharged03",&probe_fprRCCharged03,"probe_fprRCCharged03/F"); 
     myTree[ii] -> Branch("probe_fprRCNeutral03",&probe_fprRCNeutral03,"probe_fprRCNeutral03/F"); 
     myTree[ii] -> Branch("probe_fprRCPhoton03", &probe_fprRCPhoton03, "probe_fprRCPhoton03/F"); 
-    /*
-    myTree[ii] -> Branch("probe_fprCharged04",&probe_fprCharged04,"probe_fprCharged04/F"); 
-    myTree[ii] -> Branch("probe_fprNeutral04",&probe_fprNeutral04,"probe_fprNeutral04/F"); 
-    myTree[ii] -> Branch("probe_fprPhoton04", &probe_fprPhoton04, "probe_fprPhoton04/F"); 
-    myTree[ii] -> Branch("probe_fprRCCharged04",&probe_fprRCCharged04,"probe_fprRCCharged04/F"); 
-    myTree[ii] -> Branch("probe_fprRCNeutral04",&probe_fprRCNeutral04,"probe_fprRCNeutral04/F"); 
-    myTree[ii] -> Branch("probe_fprRCPhoton04", &probe_fprRCPhoton04, "probe_fprRCPhoton04/F"); 
-    */
     myTree[ii] -> Branch("numvtx",&numvtx,"numvtx/I");
     myTree[ii] -> Branch("rho",&rho,"rho/F");
     myTree[ii] -> Branch("puW",  &puW,  "puW/F");
     myTree[ii] -> Branch("r9WeightEB",  &r9weight_EB,  "r9WeightEB/F");
     myTree[ii] -> Branch("r9WeightEE",  &r9weight_EE,  "r9WeightEE/F");
-    myTree[ii] -> Branch("puW30",&puW30,"puW30/F");
-    myTree[ii] -> Branch("puW50",&puW50,"puW50/F");
-    myTree[ii] -> Branch("puW75",&puW75,"puW75/F");
-    myTree[ii] -> Branch("puW90",&puW90,"puW90/F");
+    myTree[ii] -> Branch("puW30", &puW30, "puW30/F");
+    myTree[ii] -> Branch("puW50", &puW50, "puW50/F");
+    myTree[ii] -> Branch("puW75", &puW75, "puW75/F");
+    myTree[ii] -> Branch("puW90", &puW90, "puW90/F");
+    myTree[ii] -> Branch("puW135",&puW135,"puW135/F");
+    myTree[ii] -> Branch("puW150",&puW150,"puW150/F");
     myTree[ii] -> Branch("okLooseElePtEta",&okLooseElePtEta,"okLooseElePtEta/I");
     myTree[ii] -> Branch("okLooseEleID",&okLooseEleID,"okLooseEleID/I");
     myTree[ii] -> Branch("okMediumElePtEta",&okMediumElePtEta,"okMediumElePtEta/I");
@@ -151,11 +150,11 @@ void TagAndProbeAnalysis::Loop()
       // we ask:
       // the event to fire one of the two T&P HLT paths
       // the tag electron to match the hard leg of the fired HLT path 
+      // both on data and on MC
       bool hltMatch = false;
       if (isHLT_TandP_Ele17() && isTrig17Mass50MatchedEle[iEle]) hltMatch = true;  
       if (isHLT_TandP_Ele20() && isTrig20Mass50MatchedEle[iEle]) hltMatch = true;  
       if (!hltMatch) continue;
-
 
       TLorentzVector theEle;
       theEle.SetPtEtaPhiM(electron_pt[iEle], electron_eta[iEle], electron_phi[iEle], 0.);
@@ -196,39 +195,39 @@ void TagAndProbeAnalysis::Loop()
 	probe_rr           = sigmaRRPhot[iPho]; 
 	probe_mvaId        = mvaIDPhot[iPho]; 
 
+	probe_charged03   = pid_pfIsoCharged03ForCiC[iPho]; 
+	probe_neutral03   = pid_pfIsoNeutrals03ForCiC[iPho]; 
+	probe_photon03    = pid_pfIsoPhotons03ForCiC[iPho]; 
+
 	probe_fprCharged03   = pid_pfIsoFPRCharged03[iPho]; 
 	probe_fprNeutral03   = pid_pfIsoFPRNeutral03[iPho]; 
 	probe_fprPhoton03    = pid_pfIsoFPRPhoton03[iPho]; 
+
 	probe_fprRCCharged03 = pid_pfIsoFPRRandomConeCharged03[iPho]; 
 	probe_fprRCNeutral03 = pid_pfIsoFPRRandomConeNeutral03[iPho]; 
 	probe_fprRCPhoton03  = pid_pfIsoFPRRandomConePhoton03[iPho]; 
-	/*
-	probe_fprCharged04   = pid_pfIsoFPRCharged04[iPho]; 
-	probe_fprNeutral04   = pid_pfIsoFPRNeutral04[iPho]; 
-	probe_fprPhoton04    = pid_pfIsoFPRPhoton04[iPho]; 
-	probe_fprRCCharged04 = pid_pfIsoFPRRandomConeCharged04[iPho]; 
-	probe_fprRCNeutral04 = pid_pfIsoFPRRandomConeNeutral04[iPho]; 
-	probe_fprRCPhoton04  = pid_pfIsoFPRRandomConePhoton04[iPho]; 
-	*/
 
 	numvtx = nvtx;
 	rho=rhoAllJets;
 
 	if(isMC) {
-	  puW   = pu_weight;
-	  puW30 = pu_weight30;
-	  puW50 = pu_weight50;
-	  puW75 = pu_weight75;
-	  puW90 = pu_weight90;
+	  puW    = pu_weight;
+	  puW30  = pu_weight30;
+	  puW50  = pu_weight50;
+	  puW75  = pu_weight75;
+	  puW90  = pu_weight90;
+	  puW135 = pu_weight135;
+	  puW150 = pu_weight150;
 	} else {
-	  puW   = 1.;
-	  puW30 = 1.;
-	  puW50 = 1.;
-	  puW75 = 1.;
-	  puW90 = 1.;
+	  puW    = 1.;
+	  puW30  = 1.;
+	  puW50  = 1.;
+	  puW75  = 1.;
+	  puW90  = 1.;
+	  puW135 = 1.;
+	  puW150 = 1.;
 	}
 	
-
 	if (r9Reweight)
 	  {
 	    r9weight_EB=r9weights_EB->GetBinContent(r9weights_EB->FindBin(r9Phot[iPho]));
@@ -254,31 +253,36 @@ void TagAndProbeAnalysis::Loop()
 	okMVA_005 = 0;
 	okMVA_01  = 0;
 	okMVA_02  = 0;
+	// new WPs by Giulia (Jan 2014) 
 	if (isEBPhot[iPho]) {
-	  if ( mvaIDPhot[iPho]>0.711099 ) okMVA_005 = 1;
-	  if ( mvaIDPhot[iPho]>0.812948 ) okMVA_01  = 1;
-	  if ( mvaIDPhot[iPho]>0.878893 ) okMVA_02  = 1;
+	  if ( mvaIDPhot[iPho]>0.83548 ) okMVA_005 = 1;
+	  if ( mvaIDPhot[iPho]>0.87602 ) okMVA_01  = 1;
+	  if ( mvaIDPhot[iPho]>0.90774 ) okMVA_02  = 1;
 	} else {
-	  if ( mvaIDPhot[iPho]>0.581733 ) okMVA_005 = 1;
-	  if ( mvaIDPhot[iPho]>0.73721  ) okMVA_01  = 1;
-	  if ( mvaIDPhot[iPho]>0.850808 ) okMVA_02  = 1;
+	  if ( mvaIDPhot[iPho]>0.87382 ) okMVA_005 = 1;
+	  if ( mvaIDPhot[iPho]>0.90492 ) okMVA_01  = 1;
+	  if ( mvaIDPhot[iPho]>0.92864 ) okMVA_02  = 1;
 	}
 	
 	// check HLT and pT range
 	if (!isMC) {
 	  myTree[0]->Fill();
-	  if ( isHLT_30() && ptPhot[iPho]>=40 && ptPhot[iPho]<65 )       myTree[1]->Fill();
-	  if ( isHLT_50() && ptPhot[iPho]>=65 && ptPhot[iPho]<90 )       myTree[2]->Fill();
-	  if ( isHLT_75() && ptPhot[iPho]>=90 && ptPhot[iPho]<105 )      myTree[3]->Fill();
-	  if ( isHLT_90() && ptPhot[iPho]>=105 && ptPhot[iPho]<200000 )  myTree[4]->Fill();
+	  if ( isHLT_30()  && ptPhot[iPho]>=40 && ptPhot[iPho]<65 )       myTree[1]->Fill();
+	  if ( isHLT_50()  && ptPhot[iPho]>=65 && ptPhot[iPho]<90 )       myTree[2]->Fill();
+	  if ( isHLT_75()  && ptPhot[iPho]>=90 && ptPhot[iPho]<105 )      myTree[3]->Fill();
+	  if ( isHLT_90()  && ptPhot[iPho]>=105 && ptPhot[iPho]<165 )     myTree[4]->Fill();
+	  if ( isHLT_135() && ptPhot[iPho]>=165 && ptPhot[iPho]<180 )     myTree[5]->Fill();
+	  if ( isHLT_150() && ptPhot[iPho]>=180 && ptPhot[iPho]<200000 )  myTree[6]->Fill();
 	}
 
 	if (isMC) {
 	  myTree[0]->Fill();
-	  if ( ptPhot[iPho]>=40 && ptPhot[iPho]<65 )         myTree[1]->Fill();
-	  if ( ptPhot[iPho]>=65 && ptPhot[iPho]<90 )         myTree[2]->Fill();
-	  if ( ptPhot[iPho]>=90 && ptPhot[iPho]<105 )        myTree[3]->Fill();
-	  if ( ptPhot[iPho]>=105 && ptPhot[iPho]<200000 )    myTree[4]->Fill();
+	  if ( ptPhot[iPho]>=40 && ptPhot[iPho]<65 )      myTree[1]->Fill();
+	  if ( ptPhot[iPho]>=65 && ptPhot[iPho]<90 )      myTree[2]->Fill();
+	  if ( ptPhot[iPho]>=90 && ptPhot[iPho]<105 )     myTree[3]->Fill();
+	  if ( ptPhot[iPho]>=105 && ptPhot[iPho]<165 )    myTree[4]->Fill();
+	  if ( ptPhot[iPho]>=165 && ptPhot[iPho]<180 )    myTree[5]->Fill();
+	  if ( ptPhot[iPho]>=180 && ptPhot[iPho]<200000 ) myTree[6]->Fill();
 	}
       
       } // loop over photons
@@ -286,7 +290,7 @@ void TagAndProbeAnalysis::Loop()
     }   // loop over electrons
   }
 
-  for (int ii=0; ii<5; ii++) {
+  for (int ii=0; ii<7; ii++) {
     outFile[ii]->cd("myTaPDir");
     myTree[ii]->Write();
     outFile[ii]->Close();
@@ -305,11 +309,9 @@ bool TagAndProbeAnalysis::isHLT_TandP_Ele20() {
     for(thestr = input.find("HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v", 0); 
 	thestr != string::npos; 
 	thestr = input.find("HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v", thestr)) {
-      // cout << "eccolo: " << (*firedHLTNames)[ii] << endl;
       return true;
     }
   }
-
 
   return isok;
 }
@@ -324,7 +326,6 @@ bool TagAndProbeAnalysis::isHLT_TandP_Ele17() {
     for(thestr = input.find("HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_Ele8_Mass50_v", 0); 
 	thestr != string::npos; 
 	thestr = input.find("HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_Ele8_Mass50_v", thestr)) {
-      // cout << "eccolo: " << (*firedHLTNames)[ii] << endl;
       return true;
     }
   }
@@ -336,10 +337,10 @@ bool TagAndProbeAnalysis::isHLT_30() {
 
   bool isok = false;
   for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v16") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v17") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v18") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v19") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_v11") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_v12") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_v13") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_v14") isok=true;
   }
   return isok;
 }
@@ -348,10 +349,10 @@ bool TagAndProbeAnalysis::isHLT_50() {
 
   bool isok = false;
   for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v14") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v15") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v16") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v17") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_v7")  isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_v8")  isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_v9")  isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_v10") isok=true;
   }
   return isok;
 }
@@ -360,10 +361,10 @@ bool TagAndProbeAnalysis::isHLT_75() {
 
   bool isok = false;
   for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v15") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v16") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v17") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v18") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_v10") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_v11") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_v12") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_v13") isok=true;
   }
   return isok;
 }
@@ -372,10 +373,34 @@ bool TagAndProbeAnalysis::isHLT_90() {
 
   bool isok = false;
   for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v12") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v13") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v14") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v15") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_v7")  isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_v8")  isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_v9")  isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_v10") isok=true;
+  }
+  return isok;
+}
+
+bool TagAndProbeAnalysis::isHLT_135() {
+
+  bool isok = false;
+  for (int ii=0; ii<(int)firedHLTNames->size(); ii++) {
+    if ( (*firedHLTNames)[ii]=="HLT_Photon135_v4") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon135_v5") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon135_v6") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon135_v7") isok=true;
+  }
+  return isok;
+}
+
+bool TagAndProbeAnalysis::isHLT_150() {
+
+  bool isok = false;
+  for (int ii=0; ii<(int)firedHLTNames->size(); ii++) {
+    if ( (*firedHLTNames)[ii]=="HLT_Photon150_v1") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon150_v2") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon150_v3") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon150_v4") isok=true;
   }
   return isok;
 }

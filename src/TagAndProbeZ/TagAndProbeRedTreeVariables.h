@@ -8,6 +8,8 @@ Float_t pu_weight30;
 Float_t pu_weight50;
 Float_t pu_weight75;
 Float_t pu_weight90;
+Float_t pu_weight135;
+Float_t pu_weight150;
 Int_t vtxId;
 
 
